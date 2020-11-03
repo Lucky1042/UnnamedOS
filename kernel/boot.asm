@@ -26,8 +26,8 @@ _start:
 	mov esp, stack_top
 
 	; Call the main kernel
-	extern kernel_main
-	call kernel_main
+	extern kmain
+	call kmain
 	
 	; Hang the os once it's done doing everything
 	cli

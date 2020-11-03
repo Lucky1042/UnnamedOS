@@ -21,14 +21,14 @@ kernel.bin:
 	$(info [INFO] Building kernel)
 	$(MAKE) -C ./kernel/ ARCH=$(ARCH) PREFIX=$(PWD) CC=$(CC) CXX=$(CXX) LD=$(LD) NASM=$(NASM)
 
-grub: kernel.bin
+grub: kernel.bin grub.cfg
 	grub-file --is-x86-multiboot $<
-	cp $< isodir/boot
-	cp grub.cfg isodir/boot/grub
+	cp $^ isodir/boot
 	grub-mkrescue -o os.iso isodir
 
 qemu: grub
 	$(QEMU) -m 512 -hda os.iso
 
+# Disabled kernel folder clean due to make deleting the source files
 clean:
 	@$(MAKE) -C ./kernel/ clean

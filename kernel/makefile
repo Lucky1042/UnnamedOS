@@ -13,7 +13,7 @@ CPP_SOURCES = $(shell find $(PWD)/kernel -type f -name '*.cpp')
 HEADERS = $(shell find $(PWD) -type f -name '*.h')
 ASMFILES = $(shell find $(PWD) -type f -name '*.asm')
 
-OBJECTS = ${CPP_SOURCES:.c=.o}
+OBJECTS = ${CPP_SOURCES:.cpp=.o}
 OBJECTS += ${ASMFILES:.asm=.o}
 
 all: kernel.bin
@@ -22,7 +22,7 @@ kernel.bin: ${OBJECTS}
 	$(info [INFO] Linking kernel)
 	$(CXX) ${LDFLAGS} -o ${PREFIX}/kernel.bin $^
 
-%.o: %.c ${HEADERS}
+%.o: %.cpp ${HEADERS}
 	$(info [INFO] Compiling C++)
 	$(CXX) ${CXXFLAGS} -c $< -o $@
 
@@ -32,4 +32,4 @@ kernel.bin: ${OBJECTS}
 
 clean:
 	$(info [INFO] Cleaning)
-	rm -rf ${OBJECTS}
+	rm ${OBJECTS}
