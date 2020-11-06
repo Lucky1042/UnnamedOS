@@ -12,7 +12,7 @@ NASM		= nasm
 QEMU		:= qemu-system-i386
 ASMFLAGS	:= -felf32
 CXXFLAGS 	:= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
-LDFLAGS	:= -ffreestanding -O2 -nostdlib -lgcc
+LDFLAGS	:= -ffreestanding -O2 -nostdlib 
 
 .PHONY: all kernel.bin multiboot_test clean
 
@@ -32,4 +32,4 @@ qemu: grub
 
 # Disabled kernel folder clean due to make deleting the source files
 clean:
-	@$(MAKE) -C ./kernel/ clean
+	@$(MAKE) -C ./kernel/ clean SYSROOT=$(SYSROOT)

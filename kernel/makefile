@@ -5,18 +5,23 @@ ifndef GAS
 endif
 
 ifndef CXXFLAGS
-	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti
+	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -Iinclude -D__is_libk -D__is_kernel
+	CXXFLAGS += --sysroot="$(SYSROOT)"
+	CXXFLAGS += -isystem="/usr/include"
 endif
 
 ifndef LDFLAGS
-	LDFLAGS = -ffreestanding -O2 -nostdlib -lgcc
+	LDFLAGS = -ffreestanding -O2 -nostdlib -Iinclude
+	LDFLAGS += --sysroot="$(SYSROOT)"
+	LDFLAGS += -isystem="/usr/include"
 endif
 
 ifndef SYSROOT
 	$(error No sysroot specified)
 endif
 
-LIBS = -lgcc -lk
+
+LIBS = -lk -lgcc
 
 #Find all the source files
 CPP_SOURCES = $(shell find $(PWD)/kernel -type f -name '*.cpp')
@@ -37,10 +42,10 @@ all: crti.o crtn.o kernel.bin
 
 kernel.bin: ${OBJECTS}
 	$(info [INFO] Linking kernel)
-	$(CXX) ${LDFLAGS} -o ${PREFIX}/kernel.bin $^
+	$(CXX) ${LDFLAGS} $(LIBS) -o ${PREFIX}/kernel.bin $^
 
 %.o: %.cpp ${HEADERS}
-	$(info [INFO] Compiling C++)
+	$(info [INFO] Compiling $<)
 	$(CXX) ${CXXFLAGS} -c $< -o $@
 
 %.o: %.asm
