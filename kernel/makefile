@@ -1,5 +1,9 @@
 # Kernel makefile
 
+ifndef GAS
+	GAS = i686-elf-as
+endif
+
 ifndef CXXFLAGS
 	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti
 endif
@@ -8,15 +12,28 @@ ifndef LDFLAGS
 	LDFLAGS = -ffreestanding -O2 -nostdlib -lgcc
 endif
 
+ifndef SYSROOT
+	$(error No sysroot specified)
+endif
+
+LIBS = -lgcc -lk
+
 #Find all the source files
 CPP_SOURCES = $(shell find $(PWD)/kernel -type f -name '*.cpp')
 HEADERS = $(shell find $(PWD) -type f -name '*.h')
 ASMFILES = $(shell find $(PWD) -type f -name '*.asm')
+GASFILES = $(wildcard *.s)
+CRTBEGIN = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
+CRTEND = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
-OBJECTS = ${CPP_SOURCES:.cpp=.o}
+OBJECTS = crti.o
+OBJECTS += ${CPP_SOURCES:.cpp=.o}
 OBJECTS += ${ASMFILES:.asm=.o}
+OBJECTS += crtn.o
 
-all: kernel.bin
+.PHONY: all crt clean
+
+all: crti.o crtn.o kernel.bin
 
 kernel.bin: ${OBJECTS}
 	$(info [INFO] Linking kernel)
@@ -27,8 +44,14 @@ kernel.bin: ${OBJECTS}
 	$(CXX) ${CXXFLAGS} -c $< -o $@
 
 %.o: %.asm
-	$(info [INFO} Assembling assembly)
+	$(info [INFO] Assembling assembly)
 	$(NASM) $< -f elf -o $@
+
+crti.o: 
+	$(GAS) arch/$(ARCH)/crti.s -o $@
+
+crtn.o: 
+	$(GAS) arch/$(ARCH)/crtn.s -o $@
 
 clean:
 	$(info [INFO] Cleaning)

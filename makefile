@@ -2,11 +2,12 @@
 
 OS_NAME		:= myos
 ARCH		= i386
+SYSROOT = $(PWD)/sysroot
 
 # Variables for easy access of tools like gcc and nasm
 CC		= i686-elf-gcc
 CXX		= i686-elf-g++
-LD		= i686-elf-ld
+LD		= i686-elf-ld 
 NASM		= nasm
 QEMU		:= qemu-system-i386
 ASMFLAGS	:= -felf32
@@ -19,7 +20,7 @@ all: kernel.bin
 
 kernel.bin:
 	$(info [INFO] Building kernel)
-	$(MAKE) -C ./kernel/ ARCH=$(ARCH) PREFIX=$(PWD) CC=$(CC) CXX=$(CXX) LD=$(LD) NASM=$(NASM)
+	$(MAKE) -C ./kernel/ ARCH=$(ARCH) PREFIX=$(PWD) CC=$(CC) CXX=$(CXX) LD=$(LD) NASM=$(NASM) SYSROOT=$(SYSROOT)
 
 grub: kernel.bin grub.cfg
 	grub-file --is-x86-multiboot $<

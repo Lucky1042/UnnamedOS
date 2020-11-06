@@ -8,8 +8,9 @@ LDFLAGS	:= -ffreestanding -O2 -nostdlib -lgcc
 
 C_SOURCES = $(shell find $(PWD) -type f -name '*.c')
 HEADERS = $(shell find $(PWD)/include -type f -name '*.h')
-
 OBJECTS = ${C_SOURCES:.c=.o}
+
+SYSROOT = $(PWD)/../../sysroot
 
 all: libk.a
 
@@ -21,6 +22,13 @@ libk.a: ${OBJECTS}
 	$(info [INFO] Compiling $@)
 	$(CC) -c $< -o $@ $(CFLAGS) -D__is_libc
 
+install: install-headers install-lib
+
+install-headers:
+	cp --preserve=timestamps -r include/ $(SYSROOT)/usr/
+
+install-lib: libk.a
+	cp -r $< $(SYSROOT)/usr/lib
 
 clean:
 	rm *.a $(OBJECTS)

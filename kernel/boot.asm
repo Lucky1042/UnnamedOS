@@ -25,6 +25,9 @@ _start:
 	; Set the stack pointer register to the top of the stack
 	mov esp, stack_top
 
+	extern _init
+	call _init
+
 	; Call the main kernel
 	extern kmain
 	call kmain
