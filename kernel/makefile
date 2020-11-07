@@ -5,13 +5,13 @@ ifndef GAS
 endif
 
 ifndef CXXFLAGS
-	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -Iinclude -D__is_libk -D__is_kernel
+	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -Iinclude -D__is_kernel
 	CXXFLAGS += --sysroot="$(SYSROOT)"
 	CXXFLAGS += -isystem="/usr/include"
 endif
 
 ifndef LDFLAGS
-	LDFLAGS = -ffreestanding -O2 -nostdlib -Iinclude
+	LDFLAGS = -ffreestanding -nostdlib -Iinclude -D__is_kernel
 	LDFLAGS += --sysroot="$(SYSROOT)"
 	LDFLAGS += -isystem="/usr/include"
 endif
@@ -32,8 +32,10 @@ CRTBEGIN = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
 CRTEND = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
 OBJECTS = crti.o
+OBJECTS += $(CRTBEGIN)
 OBJECTS += ${CPP_SOURCES:.cpp=.o}
 OBJECTS += ${ASMFILES:.asm=.o}
+OBJECTS += $(CRTEND)
 OBJECTS += crtn.o
 
 .PHONY: all crt clean
@@ -58,6 +60,9 @@ crti.o:
 crtn.o: 
 	$(GAS) arch/$(ARCH)/crtn.s -o $@
 
+install-headers:
+	cp -r --preserve=timestamps include $(SYSROOT)/usr
+
 clean:
 	$(info [INFO] Cleaning)
-	rm ${OBJECTS}
+	#rm ${OBJECTS}
