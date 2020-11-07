@@ -5,13 +5,13 @@ ifndef GAS
 endif
 
 ifndef CXXFLAGS
-	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -Iinclude -D__is_kernel
+	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -D__is_kernel
 	CXXFLAGS += --sysroot="$(SYSROOT)"
 	CXXFLAGS += -isystem="/usr/include"
 endif
 
 ifndef LDFLAGS
-	LDFLAGS = -ffreestanding -nostdlib -Iinclude -D__is_kernel
+	LDFLAGS = -T linker.ld -ffreestanding -D__is_kernel
 	LDFLAGS += --sysroot="$(SYSROOT)"
 	LDFLAGS += -isystem="/usr/include"
 endif
@@ -21,7 +21,7 @@ ifndef SYSROOT
 endif
 
 
-LIBS = -lk -lgcc
+LIBS = -nostdlib -lk -lgcc
 
 #Find all the source files
 CPP_SOURCES = $(shell find $(PWD)/kernel -type f -name '*.cpp')
@@ -33,7 +33,7 @@ CRTEND = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
 OBJECTS = crti.o
 OBJECTS += $(CRTBEGIN)
-OBJECTS += ${CPP_SOURCES:.cpp=.o}
+OBJECTS += ${CPP_SOURCES:.c=.o}
 OBJECTS += ${ASMFILES:.asm=.o}
 OBJECTS += $(CRTEND)
 OBJECTS += crtn.o
