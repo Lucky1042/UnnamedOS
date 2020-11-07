@@ -24,7 +24,8 @@ kernel.bin:
 
 grub: kernel.bin grub.cfg
 	grub-file --is-x86-multiboot $<
-	cp $^ isodir/boot
+	cp kernel.bin isodir/boot
+	cp grub.cfg isodir/boot/grub
 	grub-mkrescue -o os.iso isodir
 
 qemu: grub

@@ -31,12 +31,15 @@ GASFILES = $(wildcard *.s)
 CRTBEGIN = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
 CRTEND = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
-OBJECTS = crti.o
-OBJECTS += $(CRTBEGIN)
 OBJECTS += ${CPP_SOURCES:.c=.o}
 OBJECTS += ${ASMFILES:.asm=.o}
-OBJECTS += $(CRTEND)
-OBJECTS += crtn.o
+
+LINKLST = crti.o
+LINKLST += $(CRTBEGIN)
+LINKLST += $(OBJECTS)
+LINKLST += $(LIBS)
+LINKLST += $(CRTEND)
+LINKLST += crtn.o
 
 .PHONY: all crt clean
 
@@ -44,7 +47,7 @@ all: crti.o crtn.o kernel.bin
 
 kernel.bin: ${OBJECTS}
 	$(info [INFO] Linking kernel)
-	$(CXX) ${LDFLAGS} $(LIBS) -o ${PREFIX}/kernel.bin $^
+	$(CXX) ${LDFLAGS} -o ${PREFIX}/kernel.bin $(LINKLST)
 
 %.o: %.cpp ${HEADERS}
 	$(info [INFO] Compiling $<)
@@ -65,4 +68,4 @@ install-headers:
 
 clean:
 	$(info [INFO] Cleaning)
-	#rm ${OBJECTS}
+	rm ${OBJECTS} crti.o crtn.o
