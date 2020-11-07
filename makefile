@@ -11,8 +11,8 @@ LD		= i686-elf-ld
 NASM		= nasm
 QEMU		:= qemu-system-i386
 ASMFLAGS	:= -felf32
-CXXFLAGS 	:= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
-LDFLAGS	:= -ffreestanding -O2 -nostdlib -lgcc
+#CXXFLAGS 	:= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+#LDFLAGS	:= -ffreestanding -O2 -nostdlib 
 
 .PHONY: all kernel.bin multiboot_test clean
 
@@ -24,12 +24,17 @@ kernel.bin:
 
 grub: kernel.bin grub.cfg
 	grub-file --is-x86-multiboot $<
-	cp $^ isodir/boot
+	cp kernel.bin isodir/boot
+	cp grub.cfg isodir/boot/grub
 	grub-mkrescue -o os.iso isodir
 
 qemu: grub
 	$(QEMU) -m 512 -hda os.iso
 
-# Disabled kernel folder clean due to make deleting the source files
+install: install-headers
+
+install-headers:
+	$(MAKE) -C ./kernel/ install-headers SYSROOT=$(SYSROOT)
+
 clean:
-	@$(MAKE) -C ./kernel/ clean
+	@$(MAKE) -C ./kernel/ clean SYSROOT=$(SYSROOT)

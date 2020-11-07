@@ -1,7 +1,7 @@
-#include <stdint.h>
-#include <stddef.h>
+#include <stdio.h>
+#include <kernel/tty.h>
 
-extern "C" void kmain() {
-	char* videomem = (char*) 0xB8000;
-	*videomem = 'X';
+extern "C" void kmain(void) {
+	terminal_initialize();
+	printf("Hello world!\n");
 }
