@@ -3,4 +3,5 @@
 
 extern "C" void kmain(void) {
 	terminal_initialize();
+	printf("Hello world!\n");
 }

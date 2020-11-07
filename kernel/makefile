@@ -31,7 +31,7 @@ GASFILES = $(wildcard *.s)
 CRTBEGIN = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
 CRTEND = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
-OBJECTS += ${CPP_SOURCES:.c=.o}
+OBJECTS += ${CPP_SOURCES:.cpp=.o}
 OBJECTS += ${ASMFILES:.asm=.o}
 
 LINKLST = crti.o
@@ -68,4 +68,4 @@ install-headers:
 
 clean:
 	$(info [INFO] Cleaning)
-	rm ${OBJECTS} crti.o crtn.o
+	#rm ${OBJECTS} crti.o crtn.o
