@@ -29,7 +29,7 @@ grub: kernel.bin grub.cfg
 	grub-mkrescue -o os.iso isodir
 
 qemu: grub
-	$(QEMU) -m 512 -hda os.iso
+	$(QEMU) -s -m 512 -hda os.iso
 
 install: install-headers
 
