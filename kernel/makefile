@@ -5,13 +5,13 @@ ifndef GAS
 endif
 
 ifndef CXXFLAGS
-	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -D__is_kernel
+	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -D__is_kernel -g
 	CXXFLAGS += --sysroot="$(SYSROOT)"
 	CXXFLAGS += -isystem="/usr/include"
 endif
 
 ifndef LDFLAGS
-	LDFLAGS = -T linker.ld -ffreestanding -D__is_kernel
+	LDFLAGS = -T linker.ld -ffreestanding -D__is_kernel -g
 	LDFLAGS += --sysroot="$(SYSROOT)"
 	LDFLAGS += -isystem="/usr/include"
 endif
@@ -55,7 +55,7 @@ kernel.bin: ${OBJECTS}
 
 %.o: %.asm
 	$(info [INFO] Assembling assembly)
-	$(NASM) $< -f elf -o $@
+	$(NASM) $< -f elf -o $@ -g
 
 crti.o: 
 	$(GAS) arch/$(ARCH)/crti.s -o $@
@@ -68,4 +68,4 @@ install-headers:
 
 clean:
 	$(info [INFO] Cleaning)
-	#rm ${OBJECTS} crti.o crtn.o
+	rm ${OBJECTS} crti.o crtn.o
