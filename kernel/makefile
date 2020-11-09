@@ -55,7 +55,7 @@ kernel.bin: ${OBJECTS}
 
 %.o: %.asm
 	$(info [INFO] Assembling assembly)
-	$(NASM) $< -f elf -o $@
+	$(NASM) $< -f elf -o $@ -g
 
 crti.o: 
 	$(GAS) arch/$(ARCH)/crti.s -o $@
@@ -68,4 +68,4 @@ install-headers:
 
 clean:
 	$(info [INFO] Cleaning)
-	#rm ${OBJECTS} crti.o crtn.o
+	rm ${OBJECTS} crti.o crtn.o
