@@ -44,6 +44,13 @@ _start:
 	mov gs, ax
 	mov ss, ax
 
+	; set the idt
+	extern idt_init
+	call idt_init
+
+	extern pit_init
+	call pit_init
+
 	; Call the main kernel
 	extern kmain
 	call kmain

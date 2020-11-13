@@ -4,6 +4,12 @@ ifndef GAS
 	GAS = i686-elf-as
 endif
 
+ifndef CFLAGS
+	CFLAGS = -ffreestanding -Wall -Wextra -g
+	CFLAGS += --sysroot="$(SYSROOT)"
+	CFLAGS += -isystem="/usr/include"
+endif
+
 ifndef CXXFLAGS
 	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -D__is_kernel -g
 	CXXFLAGS += --sysroot="$(SYSROOT)"
@@ -24,6 +30,7 @@ endif
 LIBS = -nostdlib -lk -lgcc
 
 #Find all the source files
+C_SOURCES = $(shell find $(PWD)/kernel -type f -name '*.c')
 CPP_SOURCES = $(shell find $(PWD)/kernel -type f -name '*.cpp')
 HEADERS = $(shell find $(PWD) -type f -name '*.h')
 ASMFILES = $(shell find $(PWD) -type f -name '*.asm')
@@ -31,6 +38,7 @@ GASFILES = $(wildcard *.s)
 CRTBEGIN = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
 CRTEND = $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 
+OBJECTS = $(C_SOURCES:.c=.o)
 OBJECTS += ${CPP_SOURCES:.cpp=.o}
 OBJECTS += ${ASMFILES:.asm=.o}
 
@@ -52,6 +60,9 @@ kernel.bin: ${OBJECTS}
 %.o: %.cpp ${HEADERS}
 	$(info [INFO] Compiling $<)
 	$(CXX) ${CXXFLAGS} -c $< -o $@
+
+%.o: %.c $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 %.o: %.asm
 	$(info [INFO] Assembling assembly)
