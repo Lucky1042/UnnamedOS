@@ -1,5 +1,5 @@
-# OS
-An operating system or something
+# Unnamed OS
+Text
 
 # How to build
 This project requires a cross compiler with instructions to build here:
