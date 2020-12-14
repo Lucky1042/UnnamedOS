@@ -1,47 +1,34 @@
-; idt.asm
-; irq handlers are called here and idt is loaded at load_idt
+; IDT structure. ISR is implemented in idt.asm. IDT is loaded in boot.asm .text section
 
-global irq0
-global irq1
-global irq2
-global irq3
-global irq4
-global irq5
-global irq6
-global irq7
-global irq8
-global irq9
-global irq10
-global irq11
-global irq12
-global irq13
-global irq14
-global irq15
+extern load_idt
 
-global load_idt
+section .data
 
-extern irq0_handler
-extern irq1_handler
+idt_start:
+; isrstub is for interrupts with no isrx function
 
-global irq0_handler
-global irq1_handler
+int0:
+	; #GP
+	dw isr0
+	dw 0x0008
+	db 0x00
+	db 11100001b
+	dw 0x0000
 
-irq0:
-	pusha
-	cld
-	call irq0_handler
-	popa
-	iret
+idt_end:
 
-irq1:
-	pusha
-	cld
-	call irq1_handler
-	popa
+idt_info:
+	dw idt_end - idt_start - 1
+	dd idt_start
+
+section .text
+
+isr0:
 	iret
 
 load_idt:
-	mov edx, [esp + 4]
-	lidt [edx]
-	sti
+	pusha
+	mov [idt_info], ebx
+	lidt [ebx]
+	popa
 	ret

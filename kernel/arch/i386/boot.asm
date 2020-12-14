@@ -22,10 +22,9 @@ resb 16384
 stack_top:
 
 section .text
-
 global _start:function (_start.end - _start)
 _start:
-	
+	cli
 	; Set the stack pointer register to the top of the stack
 	mov esp, stack_top
 
@@ -44,19 +43,20 @@ _start:
 	mov gs, ax
 	mov ss, ax
 
-	; set the idt
-	extern idt_init
-	call idt_init
+	extern load_idt
+	call load_idt
 
-	extern pit_init
-	call pit_init
+	; setup the pic
+	extern pic_remap
+	call pic_remap
+	
+	sti
 
 	; Call the main kernel
 	extern kmain
 	call kmain
 	
 	; Hang the os once it's done doing everything
-	cli
-.hang	hlt
+.hang	nop
 	jmp .hang
 .end:
