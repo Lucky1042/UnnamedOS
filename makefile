@@ -9,8 +9,8 @@ CC		= i686-elf-gcc
 CXX		= i686-elf-g++
 LD		= i686-elf-ld 
 NASM		= nasm
-QEMU		:= qemu-system-i386
-ASMFLAGS	:= -felf32
+QEMU		= qemu-system-i386
+ASMFLAGS	= -felf32
 #CXXFLAGS 	:= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 #LDFLAGS	:= -ffreestanding -O2 -nostdlib 
 
@@ -29,7 +29,7 @@ grub: kernel.bin grub.cfg
 	grub-mkrescue -o os.iso isodir
 
 qemu: grub
-	$(QEMU) -no-reboot -s -m 512 -hda os.iso
+	$(QEMU) -no-shutdown -no-reboot -s -m 512 -hda os.iso
 
 install: install-headers
 
