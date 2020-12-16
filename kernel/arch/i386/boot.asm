@@ -22,6 +22,9 @@ resb 16384
 stack_top:
 
 section .text
+
+
+
 global _start:function (_start.end - _start)
 _start:
 	cli
@@ -31,32 +34,39 @@ _start:
 	extern _init
 	call _init
 
+	xchg bx, bx
+
 	lgdt [gdt_descriptor]
 	mov eax, cr0 ; copy cr0 register to eax
 	or eax, 0x1 ; set the first bit
 	mov cr0, eax ; update cr0 with eax
+	jmp 0x08:.gdt_jmp
 
+.gdt_jmp:
 	mov ax, DATA_SEG
 	mov ds, ax
 	mov es, ax
 	mov fs, ax
 	mov gs, ax
 	mov ss, ax
+	jmp .gdt_jmp2
 
-	extern load_idt
-	call load_idt
+.gdt_jmp2:
+	; setup the IDT
+	extern idt_setup
+	call idt_setup
+	extern idtp
+	lidt [idtp]
 
-	; setup the pic
-	extern pic_remap
-	call pic_remap
-	
 	sti
+
+	xchg bx, bx
 
 	; Call the main kernel
 	extern kmain
 	call kmain
 	
 	; Hang the os once it's done doing everything
-.hang	nop
+.hang	hlt
 	jmp .hang
 .end:
