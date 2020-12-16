@@ -67,6 +67,8 @@ isr5:
 
 isr6:
 	pushad
+	mov ebx, 8
+	call exception_stub
 	popad
 	iret
 
@@ -77,6 +79,8 @@ isr7:
 
 isr8:
 	pushad
+	mov ebx, 8
+	call exception_stub
 	popad
 	iret
 
@@ -92,6 +96,8 @@ isr10:
 
 isr11:
 	pushad
+	mov ebx, 11
+	call exception_stub
 	popad
 	iret
 
@@ -102,7 +108,20 @@ isr12:
 
 isr13:
 	pushad
+	mov ebx, 13
 	call exception_stub
+	popad
+	iret
+
+isr14:
+	pushad
+	mov ebx, 14
+	call exception_stub
+	popad
+	iret
+
+isr15:
+	pushad
 	popad
 	iret
 
@@ -186,8 +205,14 @@ isr31:
 	iret
 
 exception_stub:
-	; TODO: Write an actual exception handler to print out the exception to screen using an error code
+	push ebp
+	mov ebp, esp
+
+	push ebx
 	extern exception_handler
 	call exception_handler
-	;xchg bx, bx
+	pop ebx
+	
+	mov esp, ebp
+	pop ebp
 	ret

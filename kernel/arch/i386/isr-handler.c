@@ -2,7 +2,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
-extern "C" void exception_handler()
+
+extern "C" void exception_handler(int e)
 {
-	printf("Exception\n");
+	printf("Exception %c\n", (unsigned char)e);
 }
