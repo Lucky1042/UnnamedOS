@@ -34,8 +34,6 @@ _start:
 	extern _init
 	call _init
 
-	xchg bx, bx
-
 	lgdt [gdt_descriptor]
 	mov eax, cr0 ; copy cr0 register to eax
 	or eax, 0x1 ; set the first bit
@@ -59,8 +57,6 @@ _start:
 	lidt [idtp]
 
 	sti
-
-	xchg bx, bx
 
 	; Call the main kernel
 	extern kmain
