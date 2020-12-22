@@ -56,6 +56,9 @@ _start:
 	extern idtp
 	lidt [idtp]
 
+	extern PICInit
+	call PICInit
+
 	sti
 
 	; Call the main kernel
@@ -63,6 +66,6 @@ _start:
 	call kmain
 	
 	; Hang the os once it's done doing everything
-.hang	hlt
+.hang	nop
 	jmp .hang
 .end:

@@ -38,6 +38,22 @@ extern "C" void isr28();
 extern "C" void isr29();
 extern "C" void isr30();
 extern "C" void isr31();
+extern "C" void isr32();
+extern "C" void isr33();
+extern "C" void isr34();
+extern "C" void isr35();
+extern "C" void isr36();
+extern "C" void isr37();
+extern "C" void isr38();
+extern "C" void isr39();
+extern "C" void isr40();
+extern "C" void isr41();
+extern "C" void isr42();
+extern "C" void isr43();
+extern "C" void isr44();
+extern "C" void isr45();
+extern "C" void isr46();
+extern "C" void isr47();
 
 struct idt_entry
 {
@@ -109,4 +125,21 @@ extern "C" void idt_setup()
 	idt_new_entry(29, (unsigned)isr29, 0x08, 0x8E);
 	idt_new_entry(30, (unsigned)isr30, 0x08, 0x8E);
 	idt_new_entry(31, (unsigned)isr31, 0x08, 0x8E);
+	//PIC entries
+	idt_new_entry(32, (unsigned)isr32, 0x08, 0x8E);
+	idt_new_entry(33, (unsigned)isr33, 0x08, 0x8E);
+	idt_new_entry(34, (unsigned)isr34, 0x08, 0x8E);
+	idt_new_entry(35, (unsigned)isr35, 0x08, 0x8E);
+	idt_new_entry(36, (unsigned)isr36, 0x08, 0x8E);
+	idt_new_entry(37, (unsigned)isr37, 0x08, 0x8E);
+	idt_new_entry(38, (unsigned)isr38, 0x08, 0x8E);
+	idt_new_entry(39, (unsigned)isr39, 0x08, 0x8E);
+	idt_new_entry(40, (unsigned)isr40, 0x08, 0x8E);
+	idt_new_entry(41, (unsigned)isr41, 0x08, 0x8E);
+	idt_new_entry(42, (unsigned)isr42, 0x08, 0x8E);
+	idt_new_entry(43, (unsigned)isr43, 0x08, 0x8E);
+	idt_new_entry(44, (unsigned)isr44, 0x08, 0x8E);
+	idt_new_entry(45, (unsigned)isr45, 0x08, 0x8E);
+	idt_new_entry(46, (unsigned)isr46, 0x08, 0x8E);
+	idt_new_entry(47, (unsigned)isr47, 0x08, 0x8E);
 }

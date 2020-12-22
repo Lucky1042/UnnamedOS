@@ -34,6 +34,22 @@ global isr28
 global isr29
 global isr30
 global isr31
+global isr32
+global isr33
+global isr34
+global isr35
+global isr36
+global isr37
+global isr38
+global isr39
+global isr40
+global isr41
+global isr42
+global isr43
+global isr44
+global isr45
+global isr46
+global isr47
 
 isr0:
 	pushad
@@ -200,6 +216,89 @@ isr30:
 	iret
 
 isr31:
+	pushad
+	popad
+	iret
+
+isr32:
+	pushad
+	extern pit_handler
+	call pit_handler
+	popad
+	iret
+
+isr33:
+	pushad
+	extern Dev1Int
+	call Dev1Int
+	popad
+	iret
+
+isr34:
+	pushad
+	popad
+	iret
+
+isr35:
+	pushad
+	popad
+	iret
+
+isr36:
+	pushad
+	popad
+	iret
+isr37:
+	pushad
+	popad
+	iret
+
+isr38:
+	pushad
+	popad
+	iret
+
+isr39:
+	pushad
+	popad
+	iret
+
+isr40:
+	pushad
+	popad
+	iret
+
+isr41:
+	pushad
+	popad
+	iret
+
+isr42:
+	pushad
+	popad
+	iret
+
+isr43:
+	pushad
+	popad
+	iret
+
+isr44:
+	pushad
+	popad
+	iret
+
+isr45:
+	pushad
+	popad
+	iret
+
+isr46:
+	pushad
+	popad
+	iret
+
+isr47:
 	pushad
 	popad
 	iret

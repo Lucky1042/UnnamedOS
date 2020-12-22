@@ -14,9 +14,9 @@ ASMFLAGS	= -felf32
 #CXXFLAGS 	:= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 #LDFLAGS	:= -ffreestanding -O2 -nostdlib 
 
-.PHONY: all kernel.bin multiboot_test clean
+.PHONY: all kernel.bin grub multiboot_test clean
 
-all: kernel.bin
+all: kernel.bin grub
 
 kernel.bin:
 	$(info [INFO] Building kernel)
@@ -29,7 +29,7 @@ grub: kernel.bin grub.cfg
 	grub-mkrescue -o os.iso isodir
 
 qemu: grub
-	$(QEMU) -no-shutdown -no-reboot -s -m 512 -hda os.iso
+	$(QEMU) -no-shutdown -no-reboot --serial stdio -s -m 512 -hda os.iso
 
 install: install-headers
 

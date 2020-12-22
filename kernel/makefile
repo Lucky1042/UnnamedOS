@@ -12,6 +12,7 @@ endif
 
 ifndef CXXFLAGS
 	CXXFLAGS = -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -D__is_kernel -g
+	CXXFLAGS += -Iinclude
 	CXXFLAGS += --sysroot="$(SYSROOT)"
 	CXXFLAGS += -isystem="/usr/include"
 endif

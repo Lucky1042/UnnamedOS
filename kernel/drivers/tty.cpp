@@ -22,7 +22,7 @@ void terminal_initialize(void) {
 	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 	terminal_buffer = VGA_MEMORY;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
-		for (size_t x = 0; x < VGA_HEIGHT; x++) {
+		for (size_t x = 0; x < VGA_WIDTH; x++) {
 			const size_t index = y * VGA_WIDTH + x;
 			terminal_buffer[index] = vga_entry(' ', terminal_color);
 		}
@@ -31,6 +31,14 @@ void terminal_initialize(void) {
 
 void terminal_setcolor(uint8_t color) {
 	terminal_color = color;
+}
+
+void terminal_scroll()
+{
+	memmove(VGA_MEMORY, (VGA_MEMORY + VGA_WIDTH), (VGA_HEIGHT * VGA_WIDTH) - VGA_WIDTH);
+	memset(VGA_MEMORY + (VGA_WIDTH * VGA_HEIGHT) - VGA_WIDTH, 0x0, VGA_WIDTH * 2);
+	--terminal_row;
+
 }
 
 void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y) {
@@ -43,14 +51,16 @@ void terminal_putchar(char c) {
 	// Checks if character is a newline
 	if (uc == '\n') {
 		terminal_column = 0;
-		++terminal_row;
+		if (terminal_row++ == VGA_HEIGHT)
+			terminal_scroll();
 		return;
 	}
 	terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
 	if (++terminal_column == VGA_WIDTH) {
 		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+		if (++terminal_row == VGA_HEIGHT) {
+			terminal_scroll();
+		}
 	}
 }
 
